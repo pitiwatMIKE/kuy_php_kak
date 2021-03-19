@@ -23,7 +23,7 @@
                             <div class="form-group row">
                                 <label for="username" class="col-sm-3 col-form-label">Name</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="username" name="lusername">
+                                    <input type="text" class="form-control" id="username" name="lusername" value="sdklfjksdajfkld">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -32,6 +32,13 @@
                                     <input type="text" class="form-control" id="password" name="lpassword">
                                 </div>
                             </div>
+                        </div>
+                        <div>
+                            <select name="sex" require>
+                            <option value="">เลือกเพศ</option>
+                                <option value="หญิง">ชาย</option>
+                                <option value="ชาย">หญิง</option>
+                            </select>
                         </div>
                         <div class="card-footer text-center">
                             <input type="submit" name="register" class="btn btn-success" value="Register">
@@ -44,46 +51,44 @@
         <?php
         include('connect.php');
 
-        if (isset($_POST['register'])) {
-            if (!empty($_POST['lusername']) && !empty($_POST['lpassword'])) {
+        if (isset($_POST['register'])) { // ตรวจสอบการกดปุ่ม register
+            if (!empty($_POST['lusername']) && !empty($_POST['lpassword'])) { // ตรวจสอบว่า usernaem กับ password ว่างไหม
                 $check = 0;
                 $username = $_POST['lusername'];
                 $password = $_POST['lpassword'];
+                $sex = $_POST['sex'];
 
-
-                $query = "SELECT * FROM merber2";
+                $query = "SELECT * FROM merber2";  //!!!อย่าลืมเปลี่ยน ชื่อตาราง
                 $result = mysqli_query($conn, $query);
-                while ($row = mysqli_fetch_array($result)) {
+                while ($row = mysqli_fetch_array($result)) {  // loop นำข้อมูลมาเช็ค ว่าชื่อที่กรอก กับ ใน database ตรงกันไหม
                     if ($row['name'] == $username) {
                         $check = 1;
                         break;
                     }
                 }
 
-                if ($check == 1) {
+                if ($check == 1) {  //ในกรณีที่มีซ้ำ 
                     echo '<script type="text/javascript">
                     swal("Fail", "ก็บอกว่าซ้ำไปสัส!!!!!", "warning");
                     </script>';
-                } else {
-                    $sql = "INSERT INTO `merber2` (`id`, `name`, `lastname`) VALUES (NULL, '$username', '$password')";
+                } else {  // ถ้าชื่อไม่ซ้ำ
+                    $sql = "INSERT INTO `merber2` (`id`, `name`, `lastname`) VALUES (NULL, '$username', '$password')";  // อย่าลืมเปลี่ยชื่อ db เพื่มข้อมูลที่ต้องการเก็บใน database ตรงนี้
 
                     $result = mysqli_query($conn, $sql);
 
-                    if ($result) {
+                    if ($result) { //ถ้าบันทึกสำเร็จ
                         echo "<script type='text/javascript'>";
                         echo "window.location = 'login.php'; ";
                         echo "console.log('hello')";
                         echo "</script>";
-                    } else {
+                    } else { //ถ้าบันทึกไม่สำเร็จ
                         echo '<script type="text/javascript">
                     swal("Fail", "บันทึกข้อมูลไม่สำเร็จ", "error");
                     </script>';
                     }
                 }
-                $_POST['lusername'] = "";
-                $_POST['lpassword'] = "";
                 $check = 0;
-            } else {
+            } else { // ถ้าข้อมูลไม่ว่าง
                 echo '<script type="text/javascript">
                     swal("Warning", "กรุณาใส่ข้อมูล!", "warning");
                     </script>';
